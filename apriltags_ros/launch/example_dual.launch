@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="apriltags_ros" type="apriltag_detector_node" name="apriltag_detector" output="screen">
+  <node pkg="apriltags_ros" type="apriltag_detector_node" name="apriltag_detector2" output="screen">
     <rosparam param="tag_descriptions">[
       {id: 0, size: 0.056},
       {id: 1, size: 0.056, frame_id: a_frame},
@@ -11,6 +11,6 @@
       {id: 8, size: 0.056},
       {id: 5, size: 0.056}]
     </rosparam>
-    <rosparam param="camera_name">/cameras/left_hand_camera/image</rosparam>
+    <rosparam param="camera_name">/cameraUP</rosparam>
   </node>
 </launch>

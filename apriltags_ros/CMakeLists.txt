@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
   geometry_msgs
+  visualization_msgs
   tf
   cv_bridge
   message_generation
@@ -30,12 +31,13 @@ generate_messages(
   DEPENDENCIES
   std_msgs
   geometry_msgs
+  visualization_msgs
 )
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES apriltag_detector
-  CATKIN_DEPENDS apriltags image_transport roscpp sensor_msgs geometry_msgs tf cv_bridge message_runtime nodelet std_msgs
+  CATKIN_DEPENDS apriltags image_transport roscpp sensor_msgs geometry_msgs tf cv_bridge message_runtime nodelet std_msgs visualization_msgs
   DEPENDS Eigen
 )
 

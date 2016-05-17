@@ -34,11 +34,13 @@ class AprilTagDetector{
  private:
   std::map<int, AprilTagDescription> descriptions_;
   std::string sensor_frame_id_;
+  std::string camera_name_;
   image_transport::ImageTransport it_;
   image_transport::CameraSubscriber image_sub_;
   image_transport::Publisher image_pub_;
   ros::Publisher detections_pub_;
   ros::Publisher pose_pub_;
+  ros::Publisher vis_pub_;
   tf::TransformBroadcaster tf_pub_;
   boost::shared_ptr<AprilTags::TagDetector> tag_detector_;
 };

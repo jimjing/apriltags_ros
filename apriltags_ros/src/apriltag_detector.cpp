@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/PoseArray.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <apriltags_ros/AprilTagDetection.h>
 #include <apriltags_ros/AprilTagDetectionArray.h>
 #include <AprilTags/Tag16h5.h>
@@ -32,12 +33,17 @@ AprilTagDetector::AprilTagDetector(ros::NodeHandle& nh, ros::NodeHandle& pnh): i
     sensor_frame_id_ = "";
   }
 
+  if(!pnh.getParam("camera_name", camera_name_)){
+    camera_name_ = "";
+  }
+
   AprilTags::TagCodes tag_codes = AprilTags::tagCodes36h11;
   tag_detector_= boost::shared_ptr<AprilTags::TagDetector>(new AprilTags::TagDetector(tag_codes));
-  image_sub_ = it_.subscribeCamera("image_rect", 1, &AprilTagDetector::imageCb, this);
-  image_pub_ = it_.advertise("tag_detections_image", 1);
-  detections_pub_ = nh.advertise<AprilTagDetectionArray>("tag_detections", 1);
-  pose_pub_ = nh.advertise<geometry_msgs::PoseArray>("tag_detections_pose", 1);
+  image_sub_ = it_.subscribeCamera(camera_name_, 1, &AprilTagDetector::imageCb, this);
+  image_pub_ = it_.advertise(camera_name_ + "/tag_detections_image", 1);
+  detections_pub_ = nh.advertise<AprilTagDetectionArray>(camera_name_ + "/tag_detections", 1);
+  pose_pub_ = nh.advertise<geometry_msgs::PoseArray>(camera_name_ + "/tag_detections_pose", 1);
+  vis_pub_ = nh.advertise<visualization_msgs::MarkerArray>( camera_name_ + "/visualization_marker", 1 );
 }
 AprilTagDetector::~AprilTagDetector(){
   image_sub_.shutdown();
@@ -67,6 +73,7 @@ void AprilTagDetector::imageCb(const sensor_msgs::ImageConstPtr& msg,const senso
 
   AprilTagDetectionArray tag_detection_array;
   geometry_msgs::PoseArray tag_pose_array;
+  visualization_msgs::MarkerArray tag_marker_array;
   tag_pose_array.header = cv_ptr->header;
 
   BOOST_FOREACH(AprilTags::TagDetection detection, detections){
@@ -93,12 +100,38 @@ void AprilTagDetector::imageCb(const sensor_msgs::ImageConstPtr& msg,const senso
     tag_pose.pose.orientation.w = rot_quaternion.w();
     tag_pose.header = cv_ptr->header;
 
+    visualization_msgs::Marker marker;
+    marker.header = cv_ptr->header;
+    marker.ns = "my_namespace";
+    marker.id = detection.id;
+    marker.type = visualization_msgs::Marker::CUBE;
+    marker.action = visualization_msgs::Marker::ADD;
+    marker.pose.position.x = transform(0,3);
+    marker.pose.position.y = transform(1,3);
+    marker.pose.position.z = transform(2,3);
+    marker.pose.orientation.x = rot_quaternion.x();
+    marker.pose.orientation.y = rot_quaternion.y();
+    marker.pose.orientation.z = rot_quaternion.z();
+    marker.pose.orientation.w = rot_quaternion.w();
+    marker.scale.x = 0.065;
+    marker.scale.y = 0.065;
+    marker.scale.z = 0.065;
+    marker.color.a = 1.0; // Don't forget to set the alpha!
+    marker.color.r = 0.0;
+    if (camera_name_.compare("/camera") != 0)
+        marker.color.r = 1.0;
+    marker.color.g = 1.0;
+    marker.color.b = 0.0;
+    //only if using a MESH_RESOURCE marker type:
+    // marker.mesh_resource = "package://pr2_description/meshes/base_v0/base.dae";
+    
     AprilTagDetection tag_detection;
     tag_detection.pose = tag_pose;
     tag_detection.id = detection.id;
     tag_detection.size = tag_size;
     tag_detection_array.detections.push_back(tag_detection);
     tag_pose_array.poses.push_back(tag_pose.pose);
+    tag_marker_array.markers.push_back(marker);
 
     tf::Stamped<tf::Transform> tag_transform;
     tf::poseStampedMsgToTF(tag_pose, tag_transform);
@@ -106,6 +139,7 @@ void AprilTagDetector::imageCb(const sensor_msgs::ImageConstPtr& msg,const senso
   }
   detections_pub_.publish(tag_detection_array);
   pose_pub_.publish(tag_pose_array);
+  vis_pub_.publish( tag_marker_array);
   image_pub_.publish(cv_ptr->toImageMsg());
 }
 

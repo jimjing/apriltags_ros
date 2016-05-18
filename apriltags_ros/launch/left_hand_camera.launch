@@ -9,7 +9,9 @@
       {id: 5, size: 0.056, frame_id: left_hand_tag_5},
       {id: 6, size: 0.056, frame_id: left_hand_tag_6},
       {id: 7, size: 0.056, frame_id: left_hand_tag_7},
-      {id: 8, size: 0.056, frame_id: left_hand_tag_8}]
+      {id: 8, size: 0.056, frame_id: left_hand_tag_8},
+      {id: 9, size: 0.056, frame_id: left_hand_tag_9},
+      {id: 10, size: 0.056, frame_id: left_hand_tag_10}]
     </rosparam>
     <rosparam param="camera_name">/cameras/left_hand_camera/image</rosparam>
   </node>

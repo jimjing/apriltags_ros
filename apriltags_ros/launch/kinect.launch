@@ -6,10 +6,12 @@
       {id: 2, size: 0.056},
       {id: 3, size: 0.056},
       {id: 4, size: 0.056},
+      {id: 5, size: 0.056},
       {id: 6, size: 0.056},
       {id: 7, size: 0.056},
       {id: 8, size: 0.056},
-      {id: 5, size: 0.056}]
+      {id: 9, size: 0.056},
+      {id: 10, size: 0.056}]
     </rosparam>
     <rosparam param="camera_name">/camera/rgb/image_mono</rosparam>
   </node>

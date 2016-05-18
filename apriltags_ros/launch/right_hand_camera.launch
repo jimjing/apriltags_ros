@@ -1,0 +1,18 @@
+<launch>
+  <node pkg="apriltags_ros" type="apriltag_detector_node" name="apriltag_detector_right_hand" output="screen">
+    <rosparam param="tag_descriptions">[
+      {id: 0, size: 0.056, frame_id: right_hand_tag_0},
+      {id: 1, size: 0.056, frame_id: right_hand_tag_1},
+      {id: 2, size: 0.056, frame_id: right_hand_tag_2},
+      {id: 3, size: 0.056, frame_id: right_hand_tag_3},
+      {id: 4, size: 0.056, frame_id: right_hand_tag_4},
+      {id: 5, size: 0.056, frame_id: right_hand_tag_5},
+      {id: 6, size: 0.056, frame_id: right_hand_tag_6},
+      {id: 7, size: 0.056, frame_id: right_hand_tag_7},
+      {id: 8, size: 0.056, frame_id: right_hand_tag_8},
+      {id: 9, size: 0.056, frame_id: right_hand_tag_9},
+      {id: 10, size: 0.056, frame_id: right_hand_tag_10}]
+    </rosparam>
+    <rosparam param="camera_name">/cameras/right_hand_camera/image</rosparam>
+  </node>
+</launch>
